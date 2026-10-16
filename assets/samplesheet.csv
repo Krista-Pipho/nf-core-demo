@@ -1,0 +1,3 @@
+sample,fastq_1,fastq_2,run_date,sample_type
+SAMPLE_1,/path/to/fastq/SAMPLE_1_R1_001.fastq.gz,/path/to/fastq/SAMPLE_1_R2_001.fastq.gz,2026-01-15,tumor
+SAMPLE_2,/path/to/fastq/SAMPLE_2_R1_001.fastq.gz,/path/to/fastq/SAMPLE_2_R2_001.fastq.gz,2026-01-15,normal

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "VARIANT_CALLING"
+description: |
+  Marks duplicate reads with GATK MarkDuplicates and calls germline short
+  variants (SNVs/indels) per-sample with GATK HaplotypeCaller. Builds the
+  GATK sequence dictionary for the reference once per pipeline run, unless
+  a pre-built one is supplied via --dict.
+keywords:
+  - variant calling
+  - gatk
+  - germline
+  - markduplicates
+  - haplotypecaller
+components:
+  - gatk4/createsequencedictionary
+  - gatk4/markduplicates
+  - samtools/index
+  - gatk4/haplotypecaller
+input:
+  - ch_bam_bai:
+      type: file
+      description: |
+        Channel: [ val(meta), path(bam), path(bai) ] - from ALIGNMENT.out.bam_bai
+  - ch_fasta:
+      type: file
+      description: |
+        Channel: [ val(meta_ref), path(fasta) ]
+  - ch_fasta_fai:
+      type: file
+      description: |
+        Channel: [ val(meta_ref), path(fai) ] - from ALIGNMENT.out.fasta_fai
+output:
+  - bam:
+      type: file
+      description: |
+        Channel: [ val(meta), path(bam), path(bai) ] - final, deduplicated,
+        analysis-ready BAM used for variant calling
+  - markdup_metrics:
+      type: file
+      description: |
+        Channel: [ val(meta), path(metrics) ] - GATK MarkDuplicates metrics
+  - vcf:
+      type: file
+      description: |
+        Channel: [ val(meta), path(vcf) ] - germline short variants (SNVs/indels)
+  - tbi:
+      type: file
+      description: |
+        Channel: [ val(meta), path(tbi) ] - tabix index for the VCF
+authors:
+  - "@kpipho"
+maintainers:
+  - "@kpipho"

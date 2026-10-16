@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "ALIGNMENT"
+description: |
+  Aligns paired-end Illumina reads to a reference genome with BWA-MEM and
+  generates alignment QC metrics (FastQC on the BAM, samtools flagstat/stats).
+  Builds the BWA index and the samtools .fai index for the reference once per
+  pipeline run, unless pre-built files are supplied via --bwa_index/--fasta_fai.
+keywords:
+  - alignment
+  - bwa
+  - fastqc
+  - samtools
+components:
+  - bwa/index
+  - bwa/mem
+  - samtools/faidx
+  - samtools/index
+  - samtools/flagstat
+  - samtools/stats
+  - fastqc
+input:
+  - ch_reads:
+      type: file
+      description: |
+        Channel: [ val(meta), [ fastq_1, fastq_2 ] ] - paired-end reads, one entry per sample
+  - ch_fasta:
+      type: file
+      description: |
+        Channel: [ val(meta_ref), path(fasta) ] - reference genome, a single value reused for every sample
+output:
+  - bam_bai:
+      type: file
+      description: |
+        Channel: [ val(meta), path(bam), path(bai) ] - coordinate-sorted, indexed aligned BAM
+  - fastqc_zip:
+      type: file
+      description: |
+        Channel: [ val(meta), path(zip) ] - FastQC report archive (run on the BAM)
+  - flagstat:
+      type: file
+      description: |
+        Channel: [ val(meta), path(flagstat) ] - samtools flagstat output
+  - stats:
+      type: file
+      description: |
+        Channel: [ val(meta), path(stats) ] - samtools stats output
+  - fasta_fai:
+      type: file
+      description: |
+        Channel: [ val(meta_ref), path(fai) ] - reference .fai index, reused by the
+        variant_calling subworkflow so it isn't rebuilt a second time
+authors:
+  - "@kpipho"
+maintainers:
+  - "@kpipho"

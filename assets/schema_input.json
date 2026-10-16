@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/kpipho/varcall/master/assets/schema_input.json",
+    "title": "kpipho/varcall pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input. Each row describes one paired-end Illumina sequencing run plus the sample metadata needed to track it through the pipeline.",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "meta": ["id"]
+            },
+            "fastq_1": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FastQ file for reads 1 (forward/R1) must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+            },
+            "fastq_2": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FastQ file for reads 2 (reverse/R2) must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'. This pipeline only supports paired-end data."
+            },
+            "run_date": {
+                "type": "string",
+                "format": "date",
+                "errorMessage": "Date the sample was sequenced/run, in ISO-8601 format (YYYY-MM-DD)",
+                "meta": ["run_date"]
+            },
+            "sample_type": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample type must be provided and cannot contain spaces, e.g. 'tumor', 'normal', 'control'",
+                "meta": ["sample_type"]
+            }
+        },
+        "required": ["sample", "fastq_1", "fastq_2", "run_date", "sample_type"]
+    }
+}

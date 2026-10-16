@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "CNV_CALLING"
+description: |
+  Calls copy-number variants from the deduplicated BAM with CNVkit, in
+  germline/tumor-only mode (no matched normal, flat internal reference).
+  Requires --intervals (a BED file of exome capture regions).
+keywords:
+  - copy number variants
+  - cnv
+  - cnvkit
+  - exome
+components:
+  - cnvkit/batch
+  - cnvkit/export
+input:
+  - ch_bam_bai:
+      type: file
+      description: |
+        Channel: [ val(meta), path(bam), path(bai) ] - from VARIANT_CALLING.out.bam (deduplicated BAM)
+  - ch_fasta:
+      type: file
+      description: |
+        Channel: [ val(meta_ref), path(fasta) ]
+  - ch_fasta_fai:
+      type: file
+      description: |
+        Channel: [ val(meta_ref), path(fai) ] - from ALIGNMENT.out.fasta_fai
+output:
+  - cnr:
+      type: file
+      description: |
+        Channel: [ val(meta), path(cnr) ] - bin-level copy-number ratios
+  - cns:
+      type: file
+      description: |
+        Channel: [ val(meta), path(cns) ] - copy-number segments (raw + integer-call)
+  - vcf:
+      type: file
+      description: |
+        Channel: [ val(meta), path(vcf) ] - CNV calls as VCF
+authors:
+  - "@kpipho"
+maintainers:
+  - "@kpipho"
